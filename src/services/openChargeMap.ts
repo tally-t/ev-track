@@ -14,8 +14,8 @@ interface FetchStationsParams {
 export async function fetchNearbyStations({
   latitude,
   longitude,
-  radiusKm = 10,
-  maxResults = 50,
+  radiusKm = 40,
+  maxResults = 100,
 }: FetchStationsParams): Promise<ChargingStation[]> {
   const params = new URLSearchParams({
     key: API_KEY,

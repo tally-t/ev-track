@@ -56,7 +56,7 @@ export default function LeafletMap({ center, stations, onSelectStation }: Props)
     <MapContainer
       center={center}
       zoom={13}
-      style={{ width: '100%', height: '100%' }}
+      style={{ width: '100%', height: '100vh' }}
     >
       <RecenterOnLoad center={center} />
       <TileLayer
