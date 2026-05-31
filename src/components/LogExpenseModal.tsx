@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -30,7 +30,16 @@ export default function LogExpenseModal({ visible, station, onClose, onSaved }: 
   const [notes, setNotes] = useState('');
   const [saving, setSaving] = useState(false);
 
-  const { currencySymbol: sym, currency } = getSettings();
+  const [sym, setSym] = useState('฿');
+  const [currency, setCurrency] = useState('THB');
+
+  useEffect(() => {
+    if (visible) {
+      const s = getSettings();
+      setSym(s.currencySymbol);
+      setCurrency(s.currency);
+    }
+  }, [visible]);
 
   const totalCost =
     parseFloat(kwhCharged || '0') * parseFloat(costPerKwh || '0');

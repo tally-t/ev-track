@@ -31,7 +31,15 @@ export default function App() {
             headerTitleStyle: { fontWeight: '700', fontSize: 17 },
             tabBarActiveTintColor: '#6366f1',
             tabBarInactiveTintColor: '#aaa',
-            tabBarStyle: { backgroundColor: '#fff', borderTopColor: '#f0f0f0', paddingTop: 4 },
+            tabBarStyle: {
+              backgroundColor: '#fff',
+              borderTopColor: '#e5e7eb',
+              borderTopWidth: 1,
+              height: 64,
+              paddingTop: 6,
+              paddingBottom: 10,
+            },
+            tabBarLabelStyle: { fontSize: 11, fontWeight: '600', marginTop: 2 },
             tabBarIcon: ({ focused, color, size }) => {
               const [active, inactive] = ICONS[route.name] ?? ['ellipse', 'ellipse-outline'];
               return <Ionicons name={focused ? active : inactive} size={size} color={color} />;
