@@ -7,16 +7,15 @@ import { useLocation } from '../hooks/useLocation';
 import StationDetailSheet from '../components/StationDetailSheet';
 import LogExpenseModal from '../components/LogExpenseModal';
 
-// Lazy-load Leaflet only on web to avoid native bundling issues
 let MapComponent: React.ComponentType<{
-  center: [number, number];
+  center: { lat: number; lng: number };
   stations: ChargingStation[];
   onSelectStation: (s: ChargingStation) => void;
 }> | null = null;
 
 if (Platform.OS === 'web') {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  MapComponent = require('../components/LeafletMap').default;
+  MapComponent = require('../components/GoogleMapView').default;
 }
 
 export default function MapScreen() {
@@ -81,7 +80,7 @@ export default function MapScreen() {
   return (
     <View style={styles.container}>
       <MapComponent
-        center={[location.latitude, location.longitude]}
+        center={{ lat: location.latitude, lng: location.longitude }}
         stations={stations}
         onSelectStation={setSelectedStation}
       />

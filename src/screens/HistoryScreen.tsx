@@ -11,6 +11,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { ExpenseLog } from '../types';
 import { getAllExpenses, deleteExpense } from '../services/database';
+import { getSettings } from '../services/userSettings';
 
 function formatDate(iso: string) {
   const d = new Date(iso);
@@ -24,9 +25,11 @@ function formatTime(iso: string) {
 
 export default function HistoryScreen() {
   const [expenses, setExpenses] = useState<ExpenseLog[]>([]);
+  const [sym, setSym] = useState('฿');
 
   const reload = useCallback(() => {
     getAllExpenses().then(setExpenses);
+    setSym(getSettings().currencySymbol);
   }, []);
 
   useFocusEffect(reload);
@@ -97,7 +100,7 @@ export default function HistoryScreen() {
               </View>
             </View>
             <View style={styles.cardRight}>
-              <Text style={styles.cost}>${item.totalCost.toFixed(2)}</Text>
+              <Text style={styles.cost}>{sym}{item.totalCost.toFixed(2)}</Text>
               <TouchableOpacity
                 onPress={() => confirmDelete(item.id)}
                 style={styles.deleteBtn}

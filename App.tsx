@@ -5,11 +5,19 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 
-import MapScreen from './src/screens/MapScreen';
+import DashboardScreen from './src/screens/DashboardScreen';
 import LogScreen from './src/screens/LogScreen';
 import HistoryScreen from './src/screens/HistoryScreen';
+import ProfileScreen from './src/screens/ProfileScreen';
 
 const Tab = createBottomTabNavigator();
+
+const ICONS: Record<string, [keyof typeof Ionicons.glyphMap, keyof typeof Ionicons.glyphMap]> = {
+  Dashboard: ['analytics',     'analytics-outline'],
+  Log:       ['add-circle',    'add-circle-outline'],
+  History:   ['receipt',       'receipt-outline'],
+  Profile:   ['person-circle', 'person-circle-outline'],
+};
 
 export default function App() {
   return (
@@ -23,36 +31,17 @@ export default function App() {
             headerTitleStyle: { fontWeight: '700', fontSize: 17 },
             tabBarActiveTintColor: '#6366f1',
             tabBarInactiveTintColor: '#aaa',
-            tabBarStyle: {
-              backgroundColor: '#fff',
-              borderTopColor: '#f0f0f0',
-              paddingTop: 4,
-            },
+            tabBarStyle: { backgroundColor: '#fff', borderTopColor: '#f0f0f0', paddingTop: 4 },
             tabBarIcon: ({ focused, color, size }) => {
-              const icons: Record<string, keyof typeof Ionicons.glyphMap> = {
-                Map: focused ? 'map' : 'map-outline',
-                Log: focused ? 'add-circle' : 'add-circle-outline',
-                History: focused ? 'receipt' : 'receipt-outline',
-              };
-              return <Ionicons name={icons[route.name]} size={size} color={color} />;
+              const [active, inactive] = ICONS[route.name] ?? ['ellipse', 'ellipse-outline'];
+              return <Ionicons name={focused ? active : inactive} size={size} color={color} />;
             },
           })}
         >
-          <Tab.Screen
-            name="Map"
-            component={MapScreen}
-            options={{ title: 'EV Stations' }}
-          />
-          <Tab.Screen
-            name="Log"
-            component={LogScreen}
-            options={{ title: 'Log Session' }}
-          />
-          <Tab.Screen
-            name="History"
-            component={HistoryScreen}
-            options={{ title: 'History' }}
-          />
+          <Tab.Screen name="Dashboard" component={DashboardScreen} options={{ title: 'Dashboard' }} />
+          <Tab.Screen name="Log" component={LogScreen} options={{ title: 'Log Session' }} />
+          <Tab.Screen name="History" component={HistoryScreen} options={{ title: 'History' }} />
+          <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
         </Tab.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
