@@ -11,8 +11,9 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { ChargingStation, ExpenseLog } from '../types';
+import { ChargingStation } from '../types';
 import { addExpense } from '../services/database';
+import { getSettings } from '../services/userSettings';
 import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
@@ -28,6 +29,8 @@ export default function LogExpenseModal({ visible, station, onClose, onSaved }: 
   const [durationMinutes, setDurationMinutes] = useState('');
   const [notes, setNotes] = useState('');
   const [saving, setSaving] = useState(false);
+
+  const { currencySymbol: sym, currency } = getSettings();
 
   const totalCost =
     parseFloat(kwhCharged || '0') * parseFloat(costPerKwh || '0');
@@ -99,11 +102,11 @@ export default function LogExpenseModal({ visible, station, onClose, onSaved }: 
               />
             </Field>
 
-            <Field label="Cost per kWh *" unit="$/kWh">
+            <Field label="Cost per kWh *" unit={`${sym}/kWh`}>
               <TextInput
                 style={styles.input}
                 keyboardType="decimal-pad"
-                placeholder="e.g. 0.35"
+                placeholder={currency === 'THB' ? 'e.g. 5.50' : 'e.g. 0.35'}
                 value={costPerKwh}
                 onChangeText={setCostPerKwh}
               />
@@ -112,7 +115,7 @@ export default function LogExpenseModal({ visible, station, onClose, onSaved }: 
             {kwhCharged && costPerKwh ? (
               <View style={styles.totalRow}>
                 <Text style={styles.totalLabel}>Total cost</Text>
-                <Text style={styles.totalValue}>${totalCost.toFixed(2)}</Text>
+                <Text style={styles.totalValue}>{sym}{totalCost.toFixed(2)}</Text>
               </View>
             ) : null}
 
