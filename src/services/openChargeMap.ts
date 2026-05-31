@@ -30,10 +30,13 @@ export async function fetchNearbyStations({
     includecomments: 'false',
   });
 
-  const response = await fetch(`${BASE_URL}/poi/?${params}`);
+  const url = `${BASE_URL}/poi/?${params}`;
+  console.log('[OCM] Fetching:', url);
+  const response = await fetch(url);
   if (!response.ok) throw new Error(`OpenChargeMap error: ${response.status}`);
 
   const data = await response.json();
+  console.log('[OCM] Stations received:', data.length);
   return data.map(mapToStation);
 }
 

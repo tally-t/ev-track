@@ -26,14 +26,17 @@ export default function MapScreen() {
   const [logStation, setLogStation] = useState<ChargingStation | undefined>(undefined);
   const [showLog, setShowLog] = useState(false);
   const [fetching, setFetching] = useState(false);
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
   const loadStations = useCallback(async (lat: number, lng: number) => {
     setFetching(true);
+    setFetchError(null);
     try {
       const data = await fetchNearbyStations({ latitude: lat, longitude: lng, radiusKm: 15 });
       setStations(data);
-    } catch {
-      Alert.alert('Error', 'Could not load charging stations. Check your API key.');
+      if (data.length === 0) setFetchError('No stations found in this area.');
+    } catch (e: any) {
+      setFetchError(e?.message ?? 'Failed to load stations.');
     } finally {
       setFetching(false);
     }
@@ -87,6 +90,13 @@ export default function MapScreen() {
         <View style={styles.fetchingBadge}>
           <ActivityIndicator size="small" color="#6366f1" />
           <Text style={styles.fetchingText}>Loading stations…</Text>
+        </View>
+      )}
+
+      {!fetching && fetchError && (
+        <View style={styles.errorBadge}>
+          <Ionicons name="warning-outline" size={14} color="#ef4444" />
+          <Text style={styles.errorBadgeText}>{fetchError}</Text>
         </View>
       )}
 
@@ -151,6 +161,23 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   fetchingText: { fontSize: 13, color: '#6366f1' },
+  errorBadge: {
+    position: 'absolute',
+    top: 16,
+    alignSelf: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  errorBadgeText: { fontSize: 13, color: '#ef4444' },
   refreshBtn: {
     position: 'absolute',
     top: 16,
